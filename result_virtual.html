@@ -10,7 +10,8 @@
             color: white;
             border: none;
             cursor: pointer;
-            padding: 10px 20px;
+            height: 45px;
+            width: 20%;
             border-radius: 5px;
             font-size: 16px;
         }
@@ -59,6 +60,9 @@
         <br>
         <button onclick="export_en_CSV()">Download result
         <div class="tooltip">Click here to download result.</div>
+        </button>
+        <button onclick="return_display()">Back to virtual sort
+        <div class="tooltip">Click here to return to display patients.</div>
         </button>
 
         <script>
@@ -119,6 +123,34 @@
               // Nettoyer l'URL
               window.URL.revokeObjectURL(url);
           }
+              let virtualWindow = null;
+        function return_display() {
+            const virtualName = localStorage.getItem("virtualTabName") || "virtualtab";
+            //Vérification et gestion de la fenêtre `virtual.html`
+            if (virtualWindow && !virtualWindow.closed) {
+                // Si la fenêtre existe et est ouverte, envoyer une commande pour mettre à jour
+                virtualWindow.focus(); // Ramener au premier plan
+            } else {
+                // Sinon, ouvrir une nouvelle fenêtre et conserver la référence
+                virtualWindow = window.open("virtual.html", virtualName);
+                // Attendre que la fenêtre soit prête (au cas où le script n'est pas chargé immédiatement)
+                virtualWindow.onload = () => {
+                    virtualWindow.postMessage({ action: 'updateTable' }, '*');
+                };
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const result_virtualName = "result_virtualtab";
+            // Store the tab name for Page2
+            localStorage.setItem("result_virtualTabName", result_virtualName);
+            window.name = result_virtualName; // Assign a unique name to this tab
+        });
+
+            // When this tab is closed or refreshed, clear the reference in localStorage
+        window.addEventListener("beforeunload", () => {
+                localStorage.removeItem("result_virtualTabName");
+        });
         </script>
     </body>
 </html>

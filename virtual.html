@@ -13,7 +13,8 @@
             color: white;
             border: none;
             cursor: pointer;
-            padding: 10px 20px;
+            height: 45px;
+            width: 13%;
             border-radius: 5px;
             font-size: 16px;
         }
@@ -235,12 +236,10 @@
         console.log("Fil: ",filteredRows);
         console.log("Virtual: ",virtual_Rows);
         // Données après similarité
-        let fullData = [];
 
         const orderedData = trierParDistanceEuclidienne(fullRows, virtual_Rows, filteredRows);
         console.log(orderedData);
 
-        const rowLength = orderedData[0].length;
         console.log("Rows:",rows);
         console.log("virtual_Rows: ",virtual_Rows_final);
         // Initialisation de formattedVirtualRows
@@ -295,13 +294,14 @@
         localStorage.setItem('profileName', JSON.stringify(profileName));
         localStorage.setItem('fullData', JSON.stringify(fullData));
         // Vérifier si la fenêtre `display.html` est déjà ouverte
+        const result_virtualName = localStorage.getItem("result_virtualTabName") || "result_virtualtab";
         if (virtual_sortWindow && !virtual_sortWindow.closed) {
             // Si déjà ouverte, envoyer une commande à la fenêtre pour qu'elle mette à jour son contenu
             virtual_sortWindow.postMessage({ action: 'updateTable' }, '*');
             virtual_sortWindow.focus(); // Ramener au premier plan
         } else {
             // Sinon, ouvrir une nouvelle fenêtre et conserver la référence
-            virtual_sortWindow = window.open('result_virtual.html', '_blank');
+            virtual_sortWindow = window.open('result_virtual.html', result_virtualName);
         }
     }
 
